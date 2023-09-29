@@ -1,39 +1,29 @@
-export const Pyramid = () => (
-  <div className="pyramid">
-    <PyramidStep label="1 MILLION €" isMilestone />
-    <PyramidStep label="300 000 €" />
-    <PyramidStep label="150 000 €" />
-    <PyramidStep label="100 000 €" />
-    <PyramidStep label="72 000 €" />
-    <PyramidStep label="48 000 €" isMilestone />
-    <PyramidStep label="24 000 €" />
-    <PyramidStep label="12 000 €" />
-    <PyramidStep label="6 000 €" />
-    <PyramidStep label="3 000 €" />
-    <PyramidStep label="1 500 €" isMilestone />
-    <PyramidStep label="800 €" />
-    <PyramidStep label="500 €" />
-    <PyramidStep label="300 €" isCurrent />
-    <PyramidStep label="200 €" />
-  </div>
-);
+import { useEffect } from 'react';
+import { retrievePyramid } from '../../../core/use-cases/retrieve-pyramid';
+import { useAppDispatch } from '../../store/use-app-dispatch';
+import { useAppSelector } from '../../store/use-app-selector';
+import { selectPyramidView } from './select-pyramid-view';
 
-const PyramidStep = ({
-  label,
-  isMilestone,
-  isCurrent,
-}: {
-  label: string;
-  isMilestone?: boolean;
-  isCurrent?: boolean;
-}) => (
-  <p
-    className={
-      'pyramid-step' +
-      (isMilestone ? ' pyramid-milestone' : '') +
-      (isCurrent ? ' pyramid-current' : '')
-    }
-  >
-    {label}
-  </p>
-);
+export const Pyramid = () => {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(retrievePyramid());
+  }, [dispatch]);
+  const pyramidView = useAppSelector(selectPyramidView);
+  return (
+    <div className="pyramid">
+      {pyramidView.map(({ label, isMilestone, isCurrent }) => (
+        <p
+          key={label}
+          className={
+            'pyramid-step' +
+            (isMilestone ? ' pyramid-milestone' : '') +
+            (isCurrent ? ' pyramid-current' : '')
+          }
+        >
+          {label}
+        </p>
+      ))}
+    </div>
+  );
+};
