@@ -1,32 +1,31 @@
+import { useEffect } from 'react';
+import { retrieveQuestion } from '../../../core/use-cases/retrieve-question';
+import { useAppDispatch } from '../../store/use-app-dispatch';
+import { useAppSelector } from '../../store/use-app-selector';
+import { selectQuestionView } from './select-question-view';
 import jfoucault from './jfoucault.jpeg';
 
-export const Question = () => (
-  <div className="question">
-    <img className="question-image" src={jfoucault} alt="Jean-Pierre Foucault" />
-    <div className="countdown">00:59</div>
-    <div className="question-wrapper">
-      <div className="question-label">{"Qu'est-ce que le TDD ?"}</div>
-      <div className="answers">
-        <Answer letter="A" label="Une technique de développement" />
-        <Answer letter="B" label="Une pratique de CSS" />
-        <Answer letter="C" label="Un langage de programmation" />
-        <Answer letter="D" label="Une pratique de gestion de projet" />
+export const Question = () => {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(retrieveQuestion());
+  }, [dispatch]);
+  const { questionLabel, answers } = useAppSelector(selectQuestionView);
+  return (
+    <div className="question">
+      <img className="question-image" src={jfoucault} alt="Jean-Pierre Foucault" />
+      <div className="countdown">00:59</div>
+      <div className="question-wrapper">
+        <div className="question-label">{questionLabel}</div>
+        <div className="answers">
+          {answers.map(({ letter, label, status }) => (
+            <button key={letter} className={'answer' + (status ? ` answer-${status}` : '')}>
+              <span className="answer-letter">{`${letter}:`}</span>
+              <span>{label}</span>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
-  </div>
-);
-
-const Answer = ({
-  letter,
-  label,
-  status,
-}: {
-  letter: string;
-  label: string;
-  status?: 'selected' | 'correct';
-}) => (
-  <button className={'answer' + (status ? ` answer-${status}` : '')}>
-    <span className="answer-letter">{`${letter}:`}</span>
-    <span>{label}</span>
-  </button>
-);
+  );
+};
