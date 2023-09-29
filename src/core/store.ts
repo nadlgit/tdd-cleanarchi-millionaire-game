@@ -1,13 +1,15 @@
 import {
   type StateFromReducersMapObject,
   configureStore,
+  createAsyncThunk,
   createListenerMiddleware,
 } from '@reduxjs/toolkit';
 import { type Dependencies } from './dependencies';
+import pyramid from './pyramid/pyramid-slice';
 import { testDefaultDependencies } from './test-default-dependencies';
 
 const reducer = {
-  //
+  pyramid,
 };
 
 const createAppStore = ({
@@ -45,6 +47,12 @@ export const initTestStore = (config?: {
   });
   return store;
 };
+
+export const createAppAsyncThunk = createAsyncThunk.withTypes<{
+  state: AppState;
+  dispatch: AppDispatch;
+  extra: Dependencies;
+}>();
 
 export type AppState = StateFromReducersMapObject<typeof reducer>;
 
