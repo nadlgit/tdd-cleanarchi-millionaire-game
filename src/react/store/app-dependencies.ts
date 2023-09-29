@@ -1,24 +1,13 @@
 import { type Dependencies } from '../../core/dependencies';
 import { InmemoryPyramidGateway } from '../../gateways/inmemory-pyramid-gateway';
-import { StubQuestionGateway } from '../../gateways/stub-question-gateway';
+import {
+  InmemoryQuestionGateway,
+  randomArrayIndexProvider,
+} from '../../gateways/inmemory-question-gateway';
 import { pyramid } from './pyramid';
-
-const questionGateway = new StubQuestionGateway();
-questionGateway.setQuestion(
-  {
-    id: 'id1',
-    label: "Qu'est-ce que le TDD ?",
-    answers: {
-      A: 'Une technique de développement',
-      B: 'Une pratique de CSS',
-      C: 'Un langage de programmation',
-      D: 'Une pratique de gestion de projet',
-    },
-  },
-  'A'
-);
+import { questionPool } from './question-pool';
 
 export const appDependencies: Dependencies = {
-  questionGateway,
+  questionGateway: new InmemoryQuestionGateway(questionPool, randomArrayIndexProvider),
   pyramidGateway: new InmemoryPyramidGateway(pyramid),
 };
