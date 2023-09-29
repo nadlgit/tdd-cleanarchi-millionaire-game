@@ -10,7 +10,13 @@ const reducer = {
   //
 };
 
-const createAppStore = ({ dependencies, initialState }: AppStoreConfig) =>
+const createAppStore = ({
+  dependencies,
+  initialState,
+}: {
+  dependencies: Dependencies;
+  initialState?: AppState;
+}) =>
   configureStore({
     reducer,
     middleware: (getDefaultMiddleware) =>
@@ -28,8 +34,8 @@ export const initStore = (dependencies: Dependencies) => {
 };
 
 export const initTestStore = (config?: {
-  dependencies?: Partial<AppStoreConfig['dependencies']>;
-  initialState?: Partial<AppStoreConfig['initialState']>;
+  dependencies?: Partial<Dependencies>;
+  initialState?: Partial<AppState>;
 }) => {
   const dependencies = testDefaultDependencies;
   const initialState = createAppStore({ dependencies }).getState();
@@ -41,8 +47,6 @@ export const initTestStore = (config?: {
 };
 
 export type AppState = StateFromReducersMapObject<typeof reducer>;
-
-export type AppStoreConfig = { dependencies: Dependencies; initialState?: AppState };
 
 export type AppStore = ReturnType<typeof createAppStore>;
 
