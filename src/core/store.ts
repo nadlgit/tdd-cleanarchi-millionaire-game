@@ -6,10 +6,11 @@ import {
 } from '@reduxjs/toolkit';
 import { type Dependencies } from './dependencies';
 import pyramid from './pyramid/pyramid-slice';
+import currentAnswer from './question/current-answer-slice';
 import currentQuestion from './question/current-question-slice';
 import { testDefaultDependencies } from './test-default-dependencies';
 
-const reducer = { currentQuestion, pyramid };
+const reducer = { currentQuestion, currentAnswer, pyramid };
 
 const createAppStore = ({
   dependencies,

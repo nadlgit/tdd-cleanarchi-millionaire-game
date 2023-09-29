@@ -3,7 +3,7 @@ import { type Question } from '../question/question';
 import { type AppState, initTestStore } from '../store';
 import { retrieveQuestion } from './retrieve-question';
 
-describe('Retrieve pyramid', () => {
+describe('Retrieve question', () => {
   type InitTestConfig = {
     partialState?: Partial<AppState>;
     fakeQuestion?: Question;
@@ -34,5 +34,16 @@ describe('Retrieve pyramid', () => {
     });
     await store.dispatch(retrieveQuestion());
     expect(store.getState()).toEqual({ ...initialState, currentQuestion: question });
+  });
+
+  it('resets answer', async () => {
+    const { store, initialState } = initTest({
+      partialState: { currentAnswer: { status: 'correct', givenValue: 'A', correctValue: 'A' } },
+    });
+    await store.dispatch(retrieveQuestion());
+    expect(store.getState()).toEqual({
+      ...initialState,
+      currentAnswer: { status: 'unvalidated', givenValue: null, correctValue: null },
+    });
   });
 });
