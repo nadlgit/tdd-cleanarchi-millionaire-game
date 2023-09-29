@@ -12,6 +12,15 @@ export const Question = () => {
   useEffect(() => {
     dispatch(retrieveQuestion());
   }, [dispatch]);
+  const isCorrectAnswer = useAppSelector((state) => state.currentAnswer.status === 'correct');
+  useEffect(() => {
+    if (isCorrectAnswer) {
+      const timeoutId = setTimeout(() => {
+        dispatch(retrieveQuestion());
+      }, 1500);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [dispatch, isCorrectAnswer]);
   const { questionId, questionLabel, answers } = useAppSelector(selectQuestionView);
   return (
     <div className="question">

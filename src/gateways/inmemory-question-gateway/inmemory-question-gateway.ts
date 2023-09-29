@@ -12,7 +12,7 @@ export class InmemoryQuestionGateway implements QuestionGateway {
   ) {}
 
   async loadNext(): Promise<Question> {
-    const index = this._indexProvider(this._questionPool.length);
+    const index = this._indexProvider(this._remainingQuestionPool.length);
     const question = this._remainingQuestionPool[index];
     this._remainingQuestionPool =
       this._remainingQuestionPool.length > 1
