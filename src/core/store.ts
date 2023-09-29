@@ -4,6 +4,7 @@ import {
   createListenerMiddleware,
 } from '@reduxjs/toolkit';
 import { type Dependencies } from './dependencies';
+import { testDefaultDependencies } from './test-default-dependencies';
 
 const reducer = {
   //
@@ -20,8 +21,22 @@ const createAppStore = ({ dependencies, initialState }: AppStoreConfig) =>
   });
 
 let store: AppStore;
-export const initStore = (config: AppStoreConfig) => {
-  store = createAppStore(config);
+
+export const initStore = (dependencies: Dependencies) => {
+  store = createAppStore({ dependencies });
+  return store;
+};
+
+export const initTestStore = (config?: {
+  dependencies?: Partial<AppStoreConfig['dependencies']>;
+  initialState?: Partial<AppStoreConfig['initialState']>;
+}) => {
+  const dependencies = testDefaultDependencies;
+  const initialState = createAppStore({ dependencies }).getState();
+  store = createAppStore({
+    dependencies: { ...dependencies, ...config?.dependencies },
+    initialState: { ...initialState, ...config?.initialState },
+  });
   return store;
 };
 
