@@ -1,4 +1,4 @@
-import { PyramidGatewayStub } from '../../gateways/pyramid-gateway-stub';
+import { StubPyramidGateway } from '../../gateways/stub-pyramid-gateway';
 import { type Pyramid } from '../pyramid/pyramid';
 import { type AppState, initTestStore } from '../store';
 import { retrievePyramid } from './retrieve-pyramid';
@@ -9,7 +9,7 @@ describe('Retrieve pyramid', () => {
     fakePyramid?: Pyramid;
   };
   const initTest = ({ partialState, fakePyramid }: InitTestConfig) => {
-    const pyramidGateway = new PyramidGatewayStub();
+    const pyramidGateway = new StubPyramidGateway();
     const store = initTestStore({
       dependencies: { pyramidGateway },
       initialState: partialState,

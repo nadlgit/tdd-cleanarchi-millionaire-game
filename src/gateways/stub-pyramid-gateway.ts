@@ -1,7 +1,7 @@
 import { type Pyramid } from '../core/pyramid/pyramid';
 import { type PyramidGateway } from '../core/pyramid/pyramid-gateway';
 
-export class PyramidGatewayStub implements PyramidGateway {
+export class StubPyramidGateway implements PyramidGateway {
   private _pyramid?: Pyramid;
 
   async load(): Promise<Pyramid> {
