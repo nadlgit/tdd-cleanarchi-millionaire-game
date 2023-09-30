@@ -1,4 +1,4 @@
-import { answerSubmitted, answerValidated } from '../question/current-answer-slice';
+import { answerSubmitted, validateAnswer } from '../question/current-answer-slice';
 import { type AnswerLetter, type Question } from '../question/question';
 import { createAppAsyncThunk } from '../store';
 
@@ -10,6 +10,6 @@ export const submitAnswer = createAppAsyncThunk(
   ) => {
     dispatch(answerSubmitted(givenAnswer));
     const correctAnswer = await questionGateway.getCorrectAnswer(questionId);
-    dispatch(answerValidated(correctAnswer));
+    dispatch(validateAnswer({ correctAnswer, givenAnswer }));
   }
 );

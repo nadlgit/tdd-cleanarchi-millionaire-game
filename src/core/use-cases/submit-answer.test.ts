@@ -39,6 +39,7 @@ describe('Submit answer', () => {
     expect(store.getState()).toEqual({
       ...initialState,
       currentAnswer: { ...store.getState().currentAnswer, givenValue: givenAnswer },
+      pyramid: { ...store.getState().pyramid },
     });
   });
 
@@ -66,7 +67,118 @@ describe('Submit answer', () => {
           givenValue: givenAnswer,
           correctValue: correctAnswer,
         },
+        pyramid: { ...store.getState().pyramid },
       });
     }
   );
+
+  describe('updates pyramid on correct answer', () => {
+    const correctAnswer = 'A';
+    const givenAnswer = correctAnswer;
+
+    it('climbs on first answer', async () => {
+      const { store, initialState } = initTest({
+        partialState: {
+          pyramid: {
+            values: ['10 €', '50 €', '100 €'],
+            milestones: [],
+            currentValue: null,
+            currentMilestone: null,
+          },
+        },
+        fakeCorrectAnswer: correctAnswer,
+      });
+      await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+      expect(store.getState()).toEqual({
+        ...initialState,
+        currentAnswer: { ...store.getState().currentAnswer },
+        pyramid: { ...initialState.pyramid, currentValue: '10 €' },
+      });
+    });
+
+    it('climbs on further answer', async () => {
+      const { store, initialState } = initTest({
+        partialState: {
+          pyramid: {
+            values: ['10 €', '50 €', '100 €'],
+            milestones: [],
+            currentValue: '10 €',
+            currentMilestone: null,
+          },
+        },
+        fakeCorrectAnswer: correctAnswer,
+      });
+      await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+      expect(store.getState()).toEqual({
+        ...initialState,
+        currentAnswer: { ...store.getState().currentAnswer },
+        pyramid: { ...initialState.pyramid, currentValue: '50 €' },
+      });
+    });
+
+    it('sets milestone if reached', async () => {
+      const { store, initialState } = initTest({
+        partialState: {
+          pyramid: {
+            values: ['10 €', '50 €', '100 €'],
+            milestones: ['50 €'],
+            currentValue: '10 €',
+            currentMilestone: null,
+          },
+        },
+        fakeCorrectAnswer: correctAnswer,
+      });
+      await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+      expect(store.getState()).toEqual({
+        ...initialState,
+        currentAnswer: { ...store.getState().currentAnswer },
+        pyramid: { ...initialState.pyramid, currentValue: '50 €', currentMilestone: '50 €' },
+      });
+    });
+  });
+
+  describe('updates pyramid on wrong answer', () => {
+    const correctAnswer = 'A';
+    const givenAnswer = 'B';
+
+    it('falls to bottom if no milestone reached', async () => {
+      const { store, initialState } = initTest({
+        partialState: {
+          pyramid: {
+            values: ['10 €', '50 €', '100 €'],
+            milestones: [],
+            currentValue: '50 €',
+            currentMilestone: null,
+          },
+        },
+        fakeCorrectAnswer: correctAnswer,
+      });
+      await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+      expect(store.getState()).toEqual({
+        ...initialState,
+        currentAnswer: { ...store.getState().currentAnswer },
+        pyramid: { ...initialState.pyramid, currentValue: null },
+      });
+    });
+
+    it('falls to reached milestone', async () => {
+      const { store, initialState } = initTest({
+        partialState: {
+          pyramid: {
+            values: ['10 €', '50 €', '100 €'],
+            milestones: ['10 €'],
+            currentValue: '50 €',
+            currentMilestone: '10 €',
+          },
+        },
+        fakeCorrectAnswer: correctAnswer,
+      });
+      await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+      expect(store.getState()).toEqual({
+        ...initialState,
+        currentAnswer: { ...store.getState().currentAnswer },
+        pyramid: { ...initialState.pyramid, currentValue: '10 €' },
+      });
+    });
+  });
 });

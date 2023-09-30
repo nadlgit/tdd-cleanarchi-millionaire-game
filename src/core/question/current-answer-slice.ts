@@ -18,10 +18,13 @@ const currentAnswerSlice = createSlice({
       ...state,
       givenValue: action.payload,
     }),
-    validated: (state, action: PayloadAction<AnswerLetter | null>) => ({
+    validate: (
+      state,
+      action: PayloadAction<{ correctAnswer: AnswerLetter; givenAnswer: AnswerLetter | null }>
+    ) => ({
       ...state,
-      correctValue: action.payload,
-      status: state.givenValue === action.payload ? 'correct' : 'wrong',
+      correctValue: action.payload.correctAnswer,
+      status: action.payload.givenAnswer === action.payload.correctAnswer ? 'correct' : 'wrong',
     }),
   },
   extraReducers: (builder) => {
@@ -31,5 +34,4 @@ const currentAnswerSlice = createSlice({
 
 export default currentAnswerSlice.reducer;
 
-export const { submitted: answerSubmitted, validated: answerValidated } =
-  currentAnswerSlice.actions;
+export const { submitted: answerSubmitted, validate: validateAnswer } = currentAnswerSlice.actions;
