@@ -2,15 +2,11 @@ import {
   type StateFromReducersMapObject,
   configureStore,
   createAsyncThunk,
-  createListenerMiddleware,
 } from '@reduxjs/toolkit';
-import { type Dependencies } from './dependencies';
-import pyramid from './pyramid/pyramid-slice';
-import currentAnswer from './question/current-answer-slice';
-import currentQuestion from './question/current-question-slice';
+import { type Dependencies } from '../dependencies';
+import { createAppListenerMiddleware } from './listener-middleware';
+import { rootReducer } from './root-reducer';
 import { testDefaultDependencies } from './test-default-dependencies';
-
-const reducer = { currentQuestion, currentAnswer, pyramid };
 
 const createAppStore = ({
   dependencies,
@@ -20,10 +16,10 @@ const createAppStore = ({
   initialState?: AppState;
 }) =>
   configureStore({
-    reducer,
+    reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({ thunk: { extraArgument: dependencies } }).prepend(
-        createListenerMiddleware({ extra: dependencies }).middleware
+        createAppListenerMiddleware(dependencies)
       ),
     preloadedState: initialState,
   });
@@ -54,7 +50,7 @@ export const createAppAsyncThunk = createAsyncThunk.withTypes<{
   extra: Dependencies;
 }>();
 
-export type AppState = StateFromReducersMapObject<typeof reducer>;
+export type AppState = StateFromReducersMapObject<typeof rootReducer>;
 
 export type AppStore = ReturnType<typeof createAppStore>;
 
