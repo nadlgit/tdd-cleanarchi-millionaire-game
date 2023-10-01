@@ -4,6 +4,7 @@ import { retrieveQuestion } from '../../../core/use-cases/retrieve-question';
 import { submitAnswer } from '../../../core/use-cases/submit-answer';
 import { useAppDispatch } from '../../store/use-app-dispatch';
 import { useAppSelector } from '../../store/use-app-selector';
+import { selectCountdownView } from './select-countdown-view';
 import { selectQuestionView } from './select-question-view';
 import jfoucault from './jfoucault.jpeg';
 
@@ -22,10 +23,11 @@ export const Question = () => {
     }
   }, [dispatch, isCorrectAnswer]);
   const { questionId, questionLabel, answers } = useAppSelector(selectQuestionView);
+  const { minutes, seconds } = useAppSelector(selectCountdownView);
   return (
     <div className="question">
       <img className="question-image" src={jfoucault} alt="Jean-Pierre Foucault" />
-      <div className="countdown">00:59</div>
+      <div className="countdown">{`${minutes}:${seconds}`}</div>
       <div className="question-wrapper">
         <div className="question-label">{questionLabel}</div>
         <div className="answers">
