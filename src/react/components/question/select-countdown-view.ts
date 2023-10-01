@@ -8,5 +8,6 @@ export const selectCountdownView = createSelector(
       .toString()
       .padStart(2, '0'),
     seconds: (remainingSeconds % 60).toString().padStart(2, '0'),
+    isExpired: remainingSeconds === 0,
   })
 );

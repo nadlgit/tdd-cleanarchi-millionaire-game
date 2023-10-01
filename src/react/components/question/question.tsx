@@ -22,8 +22,8 @@ export const Question = () => {
       return () => clearTimeout(timeoutId);
     }
   }, [dispatch, isCorrectAnswer]);
-  const { questionId, questionLabel, answers } = useAppSelector(selectQuestionView);
-  const { minutes, seconds } = useAppSelector(selectCountdownView);
+  const { questionId, questionLabel, answers, isSubmitted } = useAppSelector(selectQuestionView);
+  const { minutes, seconds, isExpired } = useAppSelector(selectCountdownView);
   return (
     <div className="question">
       <img className="question-image" src={jfoucault} alt="Jean-Pierre Foucault" />
@@ -38,6 +38,7 @@ export const Question = () => {
               onClick={() =>
                 dispatch(submitAnswer({ questionId, givenAnswer: letter as AnswerLetter }))
               }
+              disabled={isSubmitted || isExpired}
             >
               <span className="answer-letter">{`${letter}:`}</span>
               <span>{label}</span>

@@ -16,5 +16,6 @@ export const selectQuestionView = createSelector(
           return { letter, label, status: undefined };
       }
     }),
+    isSubmitted: !!currentAnswer.givenValue,
   })
 );

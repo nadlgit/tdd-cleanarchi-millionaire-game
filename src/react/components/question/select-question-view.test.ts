@@ -10,7 +10,8 @@ describe('Question view selector', () => {
   };
 
   const expectedQuestionView = (
-    expectedStatus: Record<AnswerLetter, undefined | 'selected' | 'correct'>
+    expectedStatus: Record<AnswerLetter, undefined | 'selected' | 'correct'>,
+    expectedSubmitted: boolean
   ) => ({
     questionId: question.id,
     questionLabel: question.label,
@@ -20,6 +21,7 @@ describe('Question view selector', () => {
       { letter: 'C', label: question.answers['C'], status: expectedStatus['C'] },
       { letter: 'D', label: question.answers['D'], status: expectedStatus['D'] },
     ],
+    isSubmitted: expectedSubmitted,
   });
 
   it('gets question view for unanswered question', () => {
@@ -31,7 +33,7 @@ describe('Question view selector', () => {
     });
     const questionView = selectQuestionView(store.getState());
     expect(questionView).toEqual(
-      expectedQuestionView({ A: undefined, B: undefined, C: undefined, D: undefined })
+      expectedQuestionView({ A: undefined, B: undefined, C: undefined, D: undefined }, false)
     );
   });
 
@@ -44,7 +46,7 @@ describe('Question view selector', () => {
     });
     const questionView = selectQuestionView(store.getState());
     expect(questionView).toEqual(
-      expectedQuestionView({ A: 'selected', B: undefined, C: undefined, D: undefined })
+      expectedQuestionView({ A: 'selected', B: undefined, C: undefined, D: undefined }, true)
     );
   });
 
@@ -57,7 +59,7 @@ describe('Question view selector', () => {
     });
     const questionView = selectQuestionView(store.getState());
     expect(questionView).toEqual(
-      expectedQuestionView({ A: 'correct', B: undefined, C: undefined, D: undefined })
+      expectedQuestionView({ A: 'correct', B: undefined, C: undefined, D: undefined }, true)
     );
   });
 
@@ -70,7 +72,7 @@ describe('Question view selector', () => {
     });
     const questionView = selectQuestionView(store.getState());
     expect(questionView).toEqual(
-      expectedQuestionView({ A: 'selected', B: 'correct', C: undefined, D: undefined })
+      expectedQuestionView({ A: 'selected', B: 'correct', C: undefined, D: undefined }, true)
     );
   });
 });

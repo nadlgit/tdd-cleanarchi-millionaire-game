@@ -7,7 +7,7 @@ describe('Countdown view selector', () => {
       initialState: { countdown: { remainingSeconds: 2, timerId: null } },
     });
     const countdownView = selectCountdownView(store.getState());
-    expect(countdownView).toEqual({ minutes: '00', seconds: '02' });
+    expect(countdownView).toEqual({ minutes: '00', seconds: '02', isExpired: false });
   });
 
   it('gets countdown view for remaining between 1 and 100 minutes', () => {
@@ -15,7 +15,7 @@ describe('Countdown view selector', () => {
       initialState: { countdown: { remainingSeconds: 90, timerId: null } },
     });
     const countdownView = selectCountdownView(store.getState());
-    expect(countdownView).toEqual({ minutes: '01', seconds: '30' });
+    expect(countdownView).toEqual({ minutes: '01', seconds: '30', isExpired: false });
   });
 
   it('gets countdown view for remaining more than 100 minutes', () => {
@@ -23,6 +23,14 @@ describe('Countdown view selector', () => {
       initialState: { countdown: { remainingSeconds: 6015, timerId: null } },
     });
     const countdownView = selectCountdownView(store.getState());
-    expect(countdownView).toEqual({ minutes: '100', seconds: '15' });
+    expect(countdownView).toEqual({ minutes: '100', seconds: '15', isExpired: false });
+  });
+
+  it('gets countdown view for expired', () => {
+    const store = initTestStore({
+      initialState: { countdown: { remainingSeconds: 0, timerId: null } },
+    });
+    const countdownView = selectCountdownView(store.getState());
+    expect(countdownView).toEqual({ minutes: '00', seconds: '00', isExpired: true });
   });
 });
