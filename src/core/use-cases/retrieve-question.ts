@@ -1,7 +1,8 @@
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import { questionRetrieved } from '../question/current-question-slice';
-import { createAppAsyncThunk } from '../store';
+import { type CreateAppAsyncThunk } from '../store';
 
-export const retrieveQuestion = createAppAsyncThunk(
+export const retrieveQuestion = (createAsyncThunk as CreateAppAsyncThunk)(
   'currentQuestion/retrieving',
   async (_, { dispatch, extra: { questionGateway } }) => {
     const question = await questionGateway.loadNext();

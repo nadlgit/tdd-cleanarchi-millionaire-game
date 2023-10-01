@@ -1,7 +1,8 @@
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import { pyramidRetrieved } from '../pyramid/pyramid-slice';
-import { createAppAsyncThunk } from '../store';
+import { type CreateAppAsyncThunk } from '../store';
 
-export const retrievePyramid = createAppAsyncThunk(
+export const retrievePyramid = (createAsyncThunk as CreateAppAsyncThunk)(
   'pyramid/retrieving',
   async (_, { dispatch, extra: { pyramidGateway } }) => {
     const pyramid = await pyramidGateway.load();

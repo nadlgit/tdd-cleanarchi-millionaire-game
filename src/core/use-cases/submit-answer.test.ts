@@ -181,4 +181,17 @@ describe('Submit answer', () => {
       });
     });
   });
+
+  it('stops countdown', async () => {
+    const givenAnswer = 'A';
+    const { store, initialState } = initTest({
+      partialState: { countdown: { remainingSeconds: 2, timerId: 1234 } },
+    });
+    await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+    expect(store.getState()).toEqual({
+      ...initialState,
+      currentAnswer: { ...store.getState().currentAnswer },
+      countdown: { remainingSeconds: initialState.countdown.remainingSeconds, timerId: null },
+    });
+  });
 });
