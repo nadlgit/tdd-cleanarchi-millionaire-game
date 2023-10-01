@@ -1,9 +1,8 @@
 import {
   type AnyAction,
-  type ListenerMiddlewareInstance,
   type StateFromReducersMapObject,
   type ThunkAction,
-  type ThunkDispatch,
+  type TypedStartListening,
   configureStore,
   createAsyncThunk,
 } from '@reduxjs/toolkit';
@@ -61,7 +60,7 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   AnyAction
 >;
 
-export type CreateAppAsyncThunk = ReturnType<
+export type AppCreateAsyncThunk = ReturnType<
   typeof createAsyncThunk.withTypes<{
     state: AppState;
     dispatch: AppDispatch;
@@ -69,8 +68,4 @@ export type CreateAppAsyncThunk = ReturnType<
   }>
 >;
 
-export type AppListenerMiddlewareInstance = ListenerMiddlewareInstance<
-  AppState,
-  ThunkDispatch<AppState, Dependencies, AnyAction>,
-  Dependencies
->;
+export type AppStartListening = TypedStartListening<AppState, AppDispatch, Dependencies>;
