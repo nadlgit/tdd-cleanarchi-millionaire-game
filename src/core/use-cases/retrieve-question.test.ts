@@ -1,5 +1,6 @@
 import { StubQuestionGateway } from '../../gateways/stub-question-gateway';
 import { StubTimerProvider } from '../../gateways/stub-timer-provider';
+import { type GameStatus } from '../game-status/game-status';
 import { type Question } from '../question/question';
 import { type AppState, initTestStore } from '../store';
 import { retrieveQuestion } from './retrieve-question';
@@ -81,4 +82,13 @@ describe('Retrieve question', () => {
       countdown: { remainingSeconds: fakeCountdownSeconds, timerId: fakeNextTimerId },
     });
   });
+
+  it.each<GameStatus>(['GAME_OVER', 'VICTORY'])(
+    'does nothing if not playing: %s',
+    async (gameStatus) => {
+      const { store, initialState } = initTest({ partialState: { gameStatus } });
+      await store.dispatch(retrieveQuestion());
+      expect(store.getState()).toEqual(initialState);
+    }
+  );
 });

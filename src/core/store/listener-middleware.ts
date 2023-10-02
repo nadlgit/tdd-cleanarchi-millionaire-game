@@ -3,6 +3,7 @@ import { type Dependencies } from '../dependencies';
 import { answerSubmittedListener } from '../use-cases/answer-submitted-listener';
 import { countdownExpiredListener } from '../use-cases/countdown-expired-listener';
 import { questionRetrievedListener } from '../use-cases/question-retrieved-listener';
+import { validateAnswerListener } from '../use-cases/validate-answer-listener';
 import { type AppStartListening } from './store';
 
 export const createAppListenerMiddleware = (dependencies: Dependencies) => {
@@ -11,5 +12,6 @@ export const createAppListenerMiddleware = (dependencies: Dependencies) => {
   questionRetrievedListener(startAppListening);
   answerSubmittedListener(startAppListening);
   countdownExpiredListener(startAppListening);
+  validateAnswerListener(startAppListening);
   return listener.middleware;
 };

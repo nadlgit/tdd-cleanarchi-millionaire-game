@@ -4,7 +4,10 @@ import { type AppCreateAsyncThunk } from '../store';
 
 export const retrieveQuestion = (createAsyncThunk as AppCreateAsyncThunk)(
   'currentQuestion/retrieving',
-  async (_, { dispatch, extra: { questionGateway } }) => {
+  async (_, { dispatch, getState, extra: { questionGateway } }) => {
+    if (getState().gameStatus !== 'PLAYING') {
+      return;
+    }
     const question = await questionGateway.loadNext();
     dispatch(questionRetrieved(question));
   }

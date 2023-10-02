@@ -7,8 +7,11 @@ export const submitAnswer = (createAsyncThunk as AppCreateAsyncThunk)(
   'currentQuestion/answerSubmitting',
   async (
     { questionId, givenAnswer }: { questionId: Question['id']; givenAnswer: AnswerLetter | null },
-    { dispatch, extra: { questionGateway } }
+    { dispatch, getState, extra: { questionGateway } }
   ) => {
+    if (getState().gameStatus !== 'PLAYING') {
+      return;
+    }
     dispatch(answerSubmitted(givenAnswer));
     const correctAnswer = await questionGateway.getCorrectAnswer(questionId);
     dispatch(validateAnswer({ correctAnswer, givenAnswer }));
