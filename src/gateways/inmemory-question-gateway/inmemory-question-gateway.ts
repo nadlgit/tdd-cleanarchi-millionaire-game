@@ -4,12 +4,14 @@ import { type ArrayIndexProvider } from './array-index-provider';
 import { type QuestionPool } from './question-pool';
 
 export class InmemoryQuestionGateway implements QuestionGateway {
-  private _remainingQuestionPool = [...this._questionPool];
+  private _remainingQuestionPool: QuestionPool;
 
   constructor(
     private readonly _questionPool: QuestionPool,
     private readonly _indexProvider: ArrayIndexProvider
-  ) {}
+  ) {
+    this._remainingQuestionPool = [...this._questionPool];
+  }
 
   async loadNext(): Promise<Question> {
     const index = this._indexProvider(this._remainingQuestionPool.length);

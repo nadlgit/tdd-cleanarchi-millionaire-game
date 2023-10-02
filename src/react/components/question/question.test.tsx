@@ -80,10 +80,10 @@ describe('Question component', () => {
 
     const expectedQuestion = questionPool[0];
     await waitFor(() => expect(getQuestionLabelElt(expectedQuestion)).toBeInTheDocument());
-    expect(getAnswerElt(expectedQuestion, 'A')).not.toBeDisabled();
-    expect(getAnswerElt(expectedQuestion, 'B')).not.toBeDisabled();
-    expect(getAnswerElt(expectedQuestion, 'C')).not.toBeDisabled();
-    expect(getAnswerElt(expectedQuestion, 'D')).not.toBeDisabled();
+    expect(getAnswerElt(expectedQuestion, 'A')).toBeEnabled();
+    expect(getAnswerElt(expectedQuestion, 'B')).toBeEnabled();
+    expect(getAnswerElt(expectedQuestion, 'C')).toBeEnabled();
+    expect(getAnswerElt(expectedQuestion, 'D')).toBeEnabled();
   });
 
   it('disables answers on answer submitted', async () => {
