@@ -18,7 +18,7 @@ export const Question = () => {
     if (isCorrectAnswer) {
       const timeoutId = setTimeout(() => {
         dispatch(retrieveQuestion());
-      }, 1500);
+      }, 1100);
       return () => clearTimeout(timeoutId);
     }
   }, [dispatch, isCorrectAnswer]);
