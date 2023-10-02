@@ -44,7 +44,6 @@ button:not(:disabled) {
 .app-zone {
   margin-block: 1rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
 
@@ -70,8 +69,6 @@ button:not(:disabled) {
 .answers {
   margin-top: 1rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
   gap: 0.75rem;
 }
 
@@ -151,4 +148,15 @@ button:not(:disabled) {
   font-weight: bold;
   color: var(--color-gray-900);
   background-color: var(--color-orange-500);
+}
+
+@media screen and (min-width: 50rem) {
+  .app-zone {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .answers {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
 }
