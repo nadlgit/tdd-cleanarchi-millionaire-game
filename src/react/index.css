@@ -115,7 +115,7 @@ button:not(:disabled) {
   background: linear-gradient(to right, #312e81, rgb(49 46 129 / 0));
 }
 
-.joker {
+.lifeline {
   padding: 0.25rem 0.75rem;
   font-weight: bold;
   border: solid 2px var(--color-blue-500);
@@ -123,10 +123,10 @@ button:not(:disabled) {
   color: var(--color-white-base);
   background-color: var(--color-gray-900);
 }
-.joker:not(:disabled):hover {
+.lifeline:not(:disabled):hover {
   background-color: var(--color-blue-500);
 }
-.joker:disabled {
+.lifeline:disabled {
   background-color: grey;
 }
 

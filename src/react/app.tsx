@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { createSelector } from '@reduxjs/toolkit';
 import { type AppState } from '../core/store';
-import { Jokers } from './components/jokers/jokers';
+import { Lifelines } from './components/lifelines/lifelines';
 import { Pyramid } from './components/pyramid/pyramid';
 import { Question } from './components/question/question';
 import { useAppSelector } from './store/use-app-selector';
@@ -39,7 +39,7 @@ const App = () => {
           <Question />
         </div>
         <div className="side-zone">
-          <Jokers />
+          <Lifelines />
           <Pyramid />
         </div>
       </div>
