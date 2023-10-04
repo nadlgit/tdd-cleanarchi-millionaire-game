@@ -17,15 +17,3 @@ export const submitAnswer = (createAsyncThunk as AppCreateAsyncThunk)(
     dispatch(validateAnswer({ correctAnswer, givenAnswer }));
   }
 );
-
-// export const submitAnswer = createAppAsyncThunk(
-//   'currentQuestion/answerSubmitting',
-//   async (
-//     { questionId, givenAnswer }: { questionId: Question['id']; givenAnswer: AnswerLetter | null },
-//     { dispatch, extra: { questionGateway } }
-//   ) => {
-//     dispatch(answerSubmitted(givenAnswer));
-//     const correctAnswer = await questionGateway.getCorrectAnswer(questionId);
-//     dispatch(validateAnswer({ correctAnswer, givenAnswer }));
-//   }
-// );
