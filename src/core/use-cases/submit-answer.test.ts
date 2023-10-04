@@ -18,14 +18,14 @@ describe('Submit answer', () => {
       initialState: partialState,
     });
     const initialState = store.getState();
-    questionGateway.setQuestion(
-      {
+    questionGateway.setQuestion({
+      question: {
         id: questionId,
         label: 'Question?',
         answers: { A: 'Answer A', B: 'Answer B', C: 'Answer C', D: 'Answer D' },
       },
-      fakeCorrectAnswer
-    );
+      correctAnswer: fakeCorrectAnswer,
+    });
     return { store, initialState };
   };
 

@@ -26,4 +26,16 @@ export class InmemoryQuestionGateway implements QuestionGateway {
   async getCorrectAnswer(questionId: Question['id']): Promise<AnswerLetter> {
     return this._questionPool.find(({ id }) => id === questionId)!.correctAnswer;
   }
+
+  async getFiftyLifelineResult(questionId: Question['id']): Promise<[AnswerLetter, AnswerLetter]> {
+    const correctAnswer = await this.getCorrectAnswer(questionId);
+    const wrongAnswers = (['A', 'B', 'C', 'D'] as AnswerLetter[]).filter(
+      (letter) => letter !== correctAnswer
+    );
+    const index = this._indexProvider(wrongAnswers.length);
+    const otherAnswer = wrongAnswers[index];
+    return correctAnswer < otherAnswer
+      ? [correctAnswer, otherAnswer]
+      : [otherAnswer, correctAnswer];
+  }
 }

@@ -29,7 +29,7 @@ describe('Retrieve question', () => {
     });
     const initialState = store.getState();
     if (fakeQuestion) {
-      questionGateway.setQuestion(fakeQuestion);
+      questionGateway.setQuestion({ question: fakeQuestion });
     }
     if (fakeNextTimerId) {
       timerProvider.setNextTimerId(fakeNextTimerId);

@@ -1,3 +1,4 @@
+import { type AnswerLetter } from '../../core/question/question';
 import { InmemoryQuestionGateway } from './inmemory-question-gateway';
 import { type QuestionPool } from './question-pool';
 
@@ -60,10 +61,40 @@ describe('In memory question gateway', () => {
   });
 
   it('gets correct answer', async () => {
-    const indexProvider = () => 0;
-    const questionGateway = new InmemoryQuestionGateway(questionPool, indexProvider);
     const question = questionPool[0];
+    const indexProvider = () => 0;
+    const questionGateway = new InmemoryQuestionGateway([question], indexProvider);
     const correctAnswer = await questionGateway.getCorrectAnswer(question.id);
     expect(correctAnswer).toEqual(question.correctAnswer);
+  });
+
+  describe('gets 50:50 lifeline result', () => {
+    it('gets correct answer and 1 wrong answer', async () => {
+      const question = questionPool[0];
+      const indexProvider = () => 0;
+      const questionGateway = new InmemoryQuestionGateway([question], indexProvider);
+      const fiftyLifelineResult = await questionGateway.getFiftyLifelineResult(question.id);
+      expect(fiftyLifelineResult).toHaveLength(2);
+      expect(fiftyLifelineResult[1]).not.toEqual(fiftyLifelineResult[0]);
+      expect(fiftyLifelineResult).toContain(question.correctAnswer);
+    });
+
+    it.each<AnswerLetter>(['A', 'D'])(
+      'sorts answers alphabetically : correct answer %s',
+      async (correctAnswer) => {
+        const question: QuestionPool[0] = {
+          id: 'id1',
+          label: 'Question 1?',
+          answers: { A: 'Answer A1', B: 'Answer B1', C: 'Answer C1', D: 'Answer D1' },
+          correctAnswer,
+        };
+        const indexProvider = () => 0;
+        const questionGateway = new InmemoryQuestionGateway([question], indexProvider);
+        const fiftyLifelineResult = await questionGateway.getFiftyLifelineResult(question.id);
+        expect(fiftyLifelineResult[1].charCodeAt(0)).toBeGreaterThan(
+          fiftyLifelineResult[0].charCodeAt(0)
+        );
+      }
+    );
   });
 });
