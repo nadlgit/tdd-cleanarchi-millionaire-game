@@ -1,9 +1,9 @@
 import { StubQuestionGateway } from '../../gateways/stub-question-gateway';
 import { type AnswerLetter } from '../question/question';
 import { type AppState, initTestStore } from '../store';
-import { useFiftyLifeline } from './use-fifty-lifeline';
+import { applyFiftyLifeline } from './apply-fifty-lifeline';
 
-describe('Use 50:50 lifeline', () => {
+describe('Apply 50:50 lifeline', () => {
   const questionId = 'id1';
 
   type InitTestConfig = {
@@ -43,7 +43,7 @@ describe('Use 50:50 lifeline', () => {
       fakeCorrectAnswer: correctAnswer,
       fakeFiftyLifelineOtherAnswer: fiftyLifelineOtherAnswer,
     });
-    await store.dispatch(useFiftyLifeline());
+    await store.dispatch(applyFiftyLifeline());
     expect(store.getState()).toEqual({
       ...initialState,
       fiftyLifeline: { questionId, remainingAnswers: [correctAnswer, fiftyLifelineOtherAnswer] },
@@ -56,7 +56,7 @@ describe('Use 50:50 lifeline', () => {
         fiftyLifeline: { questionId, remainingAnswers: ['A', 'B'] },
       },
     });
-    await store.dispatch(useFiftyLifeline());
+    await store.dispatch(applyFiftyLifeline());
     expect(store.getState()).toEqual(initialState);
   });
 });
