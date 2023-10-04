@@ -12,18 +12,19 @@ describe('Submit answer', () => {
     fakeCorrectAnswer?: AnswerLetter;
   };
   const initTest = ({ partialState, fakeCorrectAnswer }: InitTestConfig) => {
+    const question = {
+      id: questionId,
+      label: 'Question?',
+      answers: { A: 'Answer A', B: 'Answer B', C: 'Answer C', D: 'Answer D' },
+    };
     const questionGateway = new StubQuestionGateway();
     const store = initTestStore({
       dependencies: { questionGateway },
-      initialState: partialState,
+      initialState: { currentQuestion: question, ...partialState },
     });
     const initialState = store.getState();
     questionGateway.setQuestion({
-      question: {
-        id: questionId,
-        label: 'Question?',
-        answers: { A: 'Answer A', B: 'Answer B', C: 'Answer C', D: 'Answer D' },
-      },
+      question,
       correctAnswer: fakeCorrectAnswer,
     });
     return { store, initialState };
@@ -36,7 +37,7 @@ describe('Submit answer', () => {
       },
     });
     const givenAnswer = 'A';
-    await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+    await store.dispatch(submitAnswer(givenAnswer));
     expect(store.getState()).toEqual({
       ...initialState,
       currentAnswer: { ...store.getState().currentAnswer, givenValue: givenAnswer },
@@ -61,7 +62,7 @@ describe('Submit answer', () => {
         },
         fakeCorrectAnswer: correctAnswer,
       });
-      await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+      await store.dispatch(submitAnswer(givenAnswer));
       expect(store.getState()).toEqual({
         ...initialState,
         currentAnswer: {
@@ -90,7 +91,7 @@ describe('Submit answer', () => {
         },
         fakeCorrectAnswer: correctAnswer,
       });
-      await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+      await store.dispatch(submitAnswer(givenAnswer));
       expect(store.getState()).toEqual({
         ...initialState,
         currentAnswer: store.getState().currentAnswer,
@@ -113,7 +114,7 @@ describe('Submit answer', () => {
         },
         fakeCorrectAnswer: correctAnswer,
       });
-      await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+      await store.dispatch(submitAnswer(givenAnswer));
       expect(store.getState()).toEqual({
         ...initialState,
         currentAnswer: store.getState().currentAnswer,
@@ -136,7 +137,7 @@ describe('Submit answer', () => {
         },
         fakeCorrectAnswer: correctAnswer,
       });
-      await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+      await store.dispatch(submitAnswer(givenAnswer));
       expect(store.getState()).toEqual({
         ...initialState,
         currentAnswer: store.getState().currentAnswer,
@@ -159,7 +160,7 @@ describe('Submit answer', () => {
         },
         fakeCorrectAnswer: correctAnswer,
       });
-      await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+      await store.dispatch(submitAnswer(givenAnswer));
       expect(store.getState()).toEqual({
         ...initialState,
         currentAnswer: store.getState().currentAnswer,
@@ -182,7 +183,7 @@ describe('Submit answer', () => {
         },
         fakeCorrectAnswer: correctAnswer,
       });
-      await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+      await store.dispatch(submitAnswer(givenAnswer));
       expect(store.getState()).toEqual({
         ...initialState,
         currentAnswer: store.getState().currentAnswer,
@@ -197,7 +198,7 @@ describe('Submit answer', () => {
     const { store, initialState } = initTest({
       partialState: { countdown: { remainingSeconds: 2, timerId: 1234 } },
     });
-    await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+    await store.dispatch(submitAnswer(givenAnswer));
     expect(store.getState()).toEqual({
       ...initialState,
       currentAnswer: store.getState().currentAnswer,
@@ -212,7 +213,7 @@ describe('Submit answer', () => {
       async (gameStatus) => {
         const givenAnswer = 'A';
         const { store, initialState } = initTest({ partialState: { gameStatus } });
-        await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+        await store.dispatch(submitAnswer(givenAnswer));
         expect(store.getState()).toEqual(initialState);
       }
     );
@@ -224,7 +225,7 @@ describe('Submit answer', () => {
         partialState: { gameStatus: 'PLAYING' },
         fakeCorrectAnswer: correctAnswer,
       });
-      await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+      await store.dispatch(submitAnswer(givenAnswer));
       expect(store.getState()).toEqual({
         ...initialState,
         currentAnswer: store.getState().currentAnswer,
@@ -248,7 +249,7 @@ describe('Submit answer', () => {
         },
         fakeCorrectAnswer: correctAnswer,
       });
-      await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+      await store.dispatch(submitAnswer(givenAnswer));
       expect(store.getState()).toEqual({
         ...initialState,
         currentAnswer: store.getState().currentAnswer,
@@ -272,7 +273,7 @@ describe('Submit answer', () => {
         },
         fakeCorrectAnswer: correctAnswer,
       });
-      await store.dispatch(submitAnswer({ questionId, givenAnswer }));
+      await store.dispatch(submitAnswer(givenAnswer));
       expect(store.getState()).toEqual({
         ...initialState,
         currentAnswer: store.getState().currentAnswer,

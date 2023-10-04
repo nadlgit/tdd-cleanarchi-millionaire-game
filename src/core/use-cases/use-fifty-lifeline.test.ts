@@ -16,18 +16,19 @@ describe('Use 50:50 lifeline', () => {
     fakeCorrectAnswer,
     fakeFiftyLifelineOtherAnswer,
   }: InitTestConfig) => {
+    const question = {
+      id: questionId,
+      label: 'Question?',
+      answers: { A: 'Answer A', B: 'Answer B', C: 'Answer C', D: 'Answer D' },
+    };
     const questionGateway = new StubQuestionGateway();
     const store = initTestStore({
       dependencies: { questionGateway },
-      initialState: partialState,
+      initialState: { currentQuestion: question, ...partialState },
     });
     const initialState = store.getState();
     questionGateway.setQuestion({
-      question: {
-        id: questionId,
-        label: 'Question?',
-        answers: { A: 'Answer A', B: 'Answer B', C: 'Answer C', D: 'Answer D' },
-      },
+      question,
       correctAnswer: fakeCorrectAnswer,
       fiftyLifelineOtherAnswer: fakeFiftyLifelineOtherAnswer,
     });
@@ -42,7 +43,7 @@ describe('Use 50:50 lifeline', () => {
       fakeCorrectAnswer: correctAnswer,
       fakeFiftyLifelineOtherAnswer: fiftyLifelineOtherAnswer,
     });
-    await store.dispatch(useFiftyLifeline(questionId));
+    await store.dispatch(useFiftyLifeline());
     expect(store.getState()).toEqual({
       ...initialState,
       fiftyLifeline: { questionId, remainingAnswers: [correctAnswer, fiftyLifelineOtherAnswer] },
@@ -55,7 +56,7 @@ describe('Use 50:50 lifeline', () => {
         fiftyLifeline: { questionId, remainingAnswers: ['A', 'B'] },
       },
     });
-    await store.dispatch(useFiftyLifeline(questionId));
+    await store.dispatch(useFiftyLifeline());
     expect(store.getState()).toEqual(initialState);
   });
 });

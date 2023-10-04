@@ -13,7 +13,6 @@ describe('Question view selector', () => {
     expectedStatus: Record<AnswerLetter, undefined | 'selected' | 'correct'>,
     expectedSubmitted: boolean
   ) => ({
-    questionId: question.id,
     questionLabel: question.label,
     answers: [
       { letter: 'A', label: question.answers['A'], status: expectedStatus['A'] },

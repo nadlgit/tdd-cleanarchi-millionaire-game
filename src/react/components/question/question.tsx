@@ -22,7 +22,7 @@ export const Question = () => {
       return () => clearTimeout(timeoutId);
     }
   }, [dispatch, isCorrectAnswer]);
-  const { questionId, questionLabel, answers, isSubmitted } = useAppSelector(selectQuestionView);
+  const { questionLabel, answers, isSubmitted } = useAppSelector(selectQuestionView);
   const { minutes, seconds, isExpired } = useAppSelector(selectCountdownView);
   return (
     <div className="question">
@@ -35,9 +35,7 @@ export const Question = () => {
             <button
               key={letter}
               className={'answer' + (status ? ` answer-${status}` : '')}
-              onClick={() =>
-                dispatch(submitAnswer({ questionId, givenAnswer: letter as AnswerLetter }))
-              }
+              onClick={() => dispatch(submitAnswer(letter as AnswerLetter))}
               disabled={isSubmitted || isExpired}
             >
               <span className="answer-letter">{`${letter}:`}</span>

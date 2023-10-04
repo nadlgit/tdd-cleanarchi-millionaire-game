@@ -8,12 +8,7 @@ export const countdownExpiredListener = (startAppListening: AppStartListening) =
       tickCountdown.match(action) &&
       previousState.countdown.remainingSeconds > 0 &&
       currentState.countdown.remainingSeconds === 0,
-    effect: async (_, { dispatch, getOriginalState }) => {
-      dispatch(
-        submitAnswer({
-          questionId: getOriginalState().currentQuestion?.id ?? '',
-          givenAnswer: null,
-        })
-      );
+    effect: async (_, { dispatch }) => {
+      dispatch(submitAnswer(null));
     },
   });

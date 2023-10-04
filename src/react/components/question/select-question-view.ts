@@ -4,7 +4,6 @@ import { type AppState } from '../../../core/store';
 export const selectQuestionView = createSelector(
   [(state: AppState) => state.currentQuestion, (state: AppState) => state.currentAnswer],
   (currentQuestion, currentAnswer) => ({
-    questionId: currentQuestion?.id ?? '',
     questionLabel: currentQuestion?.label ?? '',
     answers: Object.entries(currentQuestion?.answers ?? {}).map(([letter, label]) => {
       switch (letter) {
