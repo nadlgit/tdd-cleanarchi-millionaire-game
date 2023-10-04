@@ -10,7 +10,7 @@ describe('Question view selector', () => {
   };
 
   const expectedQuestionView = (
-    expectedStatus: Record<AnswerLetter, undefined | 'selected' | 'correct'>,
+    expectedStatus: Record<AnswerLetter, undefined | 'selected' | 'correct' | 'eliminated'>,
     expectedSubmitted: boolean
   ) => ({
     questionLabel: question.label,
@@ -72,6 +72,20 @@ describe('Question view selector', () => {
     const questionView = selectQuestionView(store.getState());
     expect(questionView).toEqual(
       expectedQuestionView({ A: 'selected', B: 'correct', C: undefined, D: undefined }, true)
+    );
+  });
+
+  it('gets question view for 50:50 lifeline', () => {
+    const store = initTestStore({
+      initialState: {
+        currentQuestion: question,
+        currentAnswer: { status: 'unvalidated', givenValue: null, correctValue: null },
+        fiftyLifeline: { questionId: question.id, remainingAnswers: ['A', 'D'] },
+      },
+    });
+    const questionView = selectQuestionView(store.getState());
+    expect(questionView).toEqual(
+      expectedQuestionView({ A: undefined, B: 'eliminated', C: 'eliminated', D: undefined }, false)
     );
   });
 });

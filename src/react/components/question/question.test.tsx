@@ -1,7 +1,8 @@
 import { Provider } from 'react-redux';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { initTestStore } from '../../../core/store';
+import { applyFiftyLifeline } from '../../../core/use-cases/apply-fifty-lifeline';
 import {
   InmemoryQuestionGateway,
   type QuestionPool,
@@ -28,18 +29,28 @@ describe('Question component', () => {
   const renderComponent = () => {
     const questionGateway = new InmemoryQuestionGateway(questionPool, () => 0);
     const timerProvider = new StubTimerProvider();
-    const fakeNextTimerId = 1234;
-    timerProvider.setNextTimerId(fakeNextTimerId);
-    const tickTimer = () => timerProvider.tick(fakeNextTimerId);
     const store = initTestStore({
       dependencies: { questionGateway, timerProvider, countdownSeconds: 1 },
     });
+    const fakeNextTimerId = 1234;
+    timerProvider.setNextTimerId(fakeNextTimerId);
     render(
       <Provider store={store}>
         <Question />
       </Provider>
     );
-    return { tickTimer };
+    return {
+      tickTimer: () => timerProvider.tick(fakeNextTimerId),
+      applyFiftyLifeline: () => store.dispatch(applyFiftyLifeline()),
+      getFiftyLifelineResult: () => {
+        const allAnswers: (keyof QuestionPool[0]['answers'])[] = ['A', 'B', 'C', 'D'];
+        const remainingAnswers =
+          store.getState().fiftyLifeline?.remainingAnswers ??
+          ([] as (keyof QuestionPool[0]['answers'])[]);
+        const eliminatedAnswers = allAnswers.filter((letter) => !remainingAnswers.includes(letter));
+        return { remainingAnswers, eliminatedAnswers };
+      },
+    };
   };
 
   const getQuestionLabelElt = (question: QuestionPool[0]) => screen.getByText(question.label);
@@ -103,11 +114,28 @@ describe('Question component', () => {
     const { tickTimer } = renderComponent();
     const expectedQuestion = questionPool[0];
     await screen.findByText(expectedQuestion.label);
-    tickTimer();
+    act(() => {
+      tickTimer();
+    });
 
     await waitFor(() => expect(getAnswerElt(expectedQuestion, 'A')).toBeDisabled());
     expect(getAnswerElt(expectedQuestion, 'B')).toBeDisabled();
     expect(getAnswerElt(expectedQuestion, 'C')).toBeDisabled();
     expect(getAnswerElt(expectedQuestion, 'D')).toBeDisabled();
+  });
+
+  it('disables answers eliminated by 50:50 lifeline', async () => {
+    const { applyFiftyLifeline, getFiftyLifelineResult } = renderComponent();
+    const expectedQuestion = questionPool[0];
+    await screen.findByText(expectedQuestion.label);
+    await act(async () => {
+      applyFiftyLifeline();
+    });
+    const { remainingAnswers, eliminatedAnswers } = getFiftyLifelineResult();
+
+    expect(getAnswerElt(expectedQuestion, remainingAnswers[0])).toBeEnabled();
+    expect(getAnswerElt(expectedQuestion, remainingAnswers[1])).toBeEnabled();
+    expect(getAnswerElt(expectedQuestion, eliminatedAnswers[0])).toBeDisabled();
+    expect(getAnswerElt(expectedQuestion, eliminatedAnswers[1])).toBeDisabled();
   });
 });

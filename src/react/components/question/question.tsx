@@ -36,7 +36,7 @@ export const Question = () => {
               key={letter}
               className={'answer' + (status ? ` answer-${status}` : '')}
               onClick={() => dispatch(submitAnswer(letter as AnswerLetter))}
-              disabled={isSubmitted || isExpired}
+              disabled={isSubmitted || isExpired || status === 'eliminated'}
             >
               <span className="answer-letter">{`${letter}:`}</span>
               <span>{label}</span>

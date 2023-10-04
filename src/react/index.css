@@ -94,6 +94,10 @@ button:not(:disabled) {
   color: var(--answer-letter-color);
 }
 
+.answer-eliminated {
+  --answer-text-color: transparent;
+}
+
 .answer-selected {
   --answer-bg-color: var(--color-orange-500);
   --answer-text-color: var(--color-gray-900);
